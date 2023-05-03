@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Analog Clock</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Arial', sans-serif;
+      background-color: darkslategrey;
+    }
+
+    .clock {
+      position: relative;
+      width: 50vmin;
+      height: 50vmin;
+      border: 5px solid black;
+      border-radius: 50%;
+      background: darkgrey;
+    }
+
+    .hand {
+      position: absolute;
+      width: 50%;
+      height: 2px;
+      background: black;
+      top: 50%;
+      transform-origin: 100%;
+      transition: all 0.05s ease;
+    }
+
+    .hour-hand {
+      height: 4px;
+    //  width: 40%;
+      background: black;
+    }
+
+    .minute-hand {
+      height: 3px;
+      background: black;
+    }
+
+    .second-hand {
+      height: 1px;
+      background: red;
+    }
+
+    .center-circle {
+      position: absolute;
+      width: 5%;
+      height: 5%;
+      background: black;
+      border-radius: 50%;
+      top: 47.5%;
+      left: 47.5%;
+    }
+
+    .number {
+      position: absolute;
+      font-size: 5vmin;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="clock">
+    <div class="hand hour-hand"></div>
+    <div class="hand minute-hand"></div>
+    <div class="hand second-hand"></div>
+    <div class="center-circle"></div>
+  </div>
+
+  <script>
+    const hourHand = document.querySelector('.hour-hand');
+    const minuteHand = document.querySelector('.minute-hand');
+    const secondHand = document.querySelector('.second-hand');
+
+    function positionNumbers() {
+      for (let i = 1; i <= 12; i++) {
+        const number = document.createElement('div');
+        number.classList.add('number');
+        number.innerHTML = i;
+        const angle = (i * 30) * (Math.PI / 180);
+        const radius = 22;
+        const x = 50 + (radius * Math.sin(angle)) - 2.5;
+        const y = 50 - (radius * Math.cos(angle)) - 2.5;
+        number.style.left = `calc(${x}vmin - 50%)`;
+        number.style.top = `calc(${y}vmin - 50%)`;
+
+        document.querySelector('.clock').appendChild(number);
+      }
+    }
+
+    function updateClock() {
+      const now = new Date();
+      const seconds = now.getSeconds();
+      const minutes = now.getMinutes();
+      const hours = now.getHours();
+
+      const secondsDegrees = (seconds / 60) * 360 + 90;
+      const minutesDegrees = (minutes / 60) * 360 + ((seconds / 60) * 6) + 90;
+      const hoursDegrees = (hours / 12) * 360 + ((minutes / 60) * 30) + 90;
+
+  secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
+  minuteHand.style.transform = `rotate(${minutesDegrees}deg)`;
+  hourHand.style.transform = `rotate(${hoursDegrees}deg)`;
+
+}
+
+positionNumbers();
+updateClock();
+setInterval(updateClock, 1000);
+      </script>
+</body>
+</html>
